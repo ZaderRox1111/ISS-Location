@@ -68,7 +68,7 @@ def display_num_people(response):
     num_people = response["number"]
 
     #print out how many people are in space right now
-    print(f"There are {num_people} people in space currently")
+    print(f"There are {num_people} people in space right now")
 
 if __name__ == "__main__":
     main()
