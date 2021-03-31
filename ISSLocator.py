@@ -1,5 +1,5 @@
 import requests
-import json
+from geopy.geocoders import Nominatim
 from datetime import datetime
 
 def main():
@@ -21,18 +21,40 @@ def main():
     display_pos_and_time(loc_response)
 
 def display_pos_and_time(response):
-    current_latitude = response["iss_position"]["latitude"]
-    current_longitude = response["iss_position"]["longitude"]
+    #initialize Nominatim API
+    geolocator = Nominatim(user_agent = "geoapiExercises")
+
+    latitude = response["iss_position"]["latitude"]
+    longitude = response["iss_position"]["longitude"]
 
     #obtain and convert the date and time to a readable format
     date_accessed = response["timestamp"]
     date_accessed = datetime.fromtimestamp(date_accessed)
 
     #print out the date and time that the location was accessed
-    print(f"Location accessed: {date_accessed}")
+    print(f"Location accessed on: {date_accessed}")
 
     #print out the latitude and longitude to the console
-    print(f"Latitude: {current_latitude} Longitude: {current_longitude}")
+    print(f"Latitude: {latitude} Longitude: {longitude}")
+
+    #discover location with geopy
+    location = geolocator.reverse(f"{latitude},{longitude}")
+
+    #try to access the address, if not possible it is over an ocean
+    try:
+        #access the address and some of its components
+        address = location.raw["address"]
+        city = address.get("city")
+        state = address.get("state")
+        country = address.get("country")
+
+        #print out the city, state and country
+        print(f"City it is over: {city}")
+        print(f"State it is over: {state}")
+        print(f"Country it is over: {country}")
+
+    except:
+        print("It is currently over an ocean")
 
 if __name__ == "__main__":
     main()
