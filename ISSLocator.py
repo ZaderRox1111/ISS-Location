@@ -4,16 +4,23 @@ from datetime import datetime
 
 def main():
     #obtain the API connection to the ISS's location
-    response = requests.get("http://api.open-notify.org/iss-now.json")
+    loc_response = requests.get("http://api.open-notify.org/iss-now.json")
 
     #check if there is an error -> if not display a success message
-    if (response.status_code == 200):
+    if (loc_response.status_code == 200):
         print("No errors connecting to the ISS api")
         print(". . .")
+    else:
+        print("There was an error connecting to the ISS api")
 
     #transfer the response to json format
     #store the latitude and longitude into variables
-    response = response.json()
+    loc_response = loc_response.json()
+    
+    #display the position and date accessed
+    display_pos_and_time(loc_response)
+
+def display_pos_and_time(response):
     current_latitude = response["iss_position"]["latitude"]
     current_longitude = response["iss_position"]["longitude"]
 
